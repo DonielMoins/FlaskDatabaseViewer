@@ -1,0 +1,19 @@
+/* ps: i hate css so everytime i use it the only thought that i can have is: */
+                                        /* cant they make a css for backend devs lol  */
+table {
+  border: 1px solid black;
+  margin: 1px;
+  padding: 1px;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid black;
+  margin: 1px;
+  padding: 1px;
+}
+
+p#query {
+    padding: 1px;
+    margin: 1px;
+}

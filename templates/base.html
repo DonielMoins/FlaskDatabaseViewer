@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <div class="error_div">
+        <h1 class="error">{% if Error is defined %} 
+                {{Error}} 
+            {% endif %}</h1>
+    </div>
     {% block head %}
     <title> QueryViewer -{% block title %} Search{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">

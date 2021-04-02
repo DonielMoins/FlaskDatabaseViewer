@@ -17,3 +17,7 @@ p#query {
     padding: 1px;
     margin: 1px;
 }
+
+h1#error {
+  color: darkred;
+}

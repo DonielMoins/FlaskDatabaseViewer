@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for
 from markupsafe import Markup
-from flask_table import Table, Col
+from flask_table import create_table, Col, Table
 from functools import cache
 import mariadb
 
@@ -10,10 +10,11 @@ import mariadb
 # Sorry ive been writing this for about 7 hours now and im almost done
 class DB_INFO:
     def __init__(self):
-        self.host      =    "localhost",
-        self.user      =    "anonymous",
-        self.passwd    =    "",
-        self.port      =    3306,
+        self.host      =    "localhost"
+        self.user      =    "anonymous"
+        self.passwd    =    ""
+        self.port      =    3306
+        self.db_name   =    "test"
         self.pool_name =    "FlaskDatabaseviewer"
         self.pool_size =    10
         # self.database  =    "DATABASE_NAME"
@@ -21,30 +22,32 @@ class DB_INFO:
 global db_Info
 global db_Conn_Pool
 
-db_Info = DB_INFO()
-db_Conn_Pool = MakeConnectionPool(db_Info)
-
-def GetCursor(connection_pool):
+def GetConnection(connection_pool):
     try:
         if type(db_Conn_Pool) != None:  
             return connection_pool.get_connection()
         else:
             connection_pool = MakeConnectionPool(db_Info)
-            return GetCursor(connection_pool)
+            return GetConnection(connection_pool)
     except mariadb.PoolError as e:
         print(f"Error opening connection from pool: {e}")
 
 def MakeConnectionPool(db_info):
         try:
-            db_conn_pool =   mariadb.connect(
+            db_conn_pool =   mariadb.ConnectionPool(
                             user=db_info.user,
                             password=db_info.passwd,
                             host=db_info.host,
-                            port=db_info.port
+                            port=db_info.port,
+                            pool_name=db_info.pool_name,
+                            pool_size=db_info.pool_size
                         )
             return db_conn_pool
         except mariadb.Error as e:
             return None
+
+db_Info = DB_INFO()
+db_Conn_Pool = MakeConnectionPool(db_Info)
 
 # def CheckPool():
 #     if type(db_Conn_Pool) is None:
@@ -54,23 +57,45 @@ def MakeConnectionPool(db_info):
 # Setup Flask App
 app = Flask(__name__)
 
-# Copied straight out of the docs lol 
-
 # Declare your table
-class ItemTable(Table, cursor):
-    def __init__(self, cursor):
-        self.cursor = cursor
-        classes = ['table', 'table-bordered']
-        if cursor != None:
-            columns = cursor.description
-            result = []
-            for value in cursor.fetchall():
-                tmp = {}
-                for (index,column) in enumerate(value):
-                    tmp[columns[index][0]] = column
+def build_table(cursor, data):
+    
+    # classes = ['table', 'table-bordered']
+    # no_items    = 'There are no results for this query'
+    if type(cursor) != None:
+        db_columns = cursor.description
+        TableMeta = create_table()
+        cols = []
+        for db_column in db_columns:
+            TableMeta.add_column(str(db_column[0]), Col(str(db_column[0])))
+            cols.append(str(db_column[0]))
+        tableItems = []
+        for rowIndex in range(len(data)):
+            row = data[rowIndex]
+            rowDict = dict()
+            
+            for colIndex in range(len(cols)):
+                rowDict[cols[colIndex]] = row[colIndex]
+            tableItems.append(rowDict)
+            
+    
+    
+        
+            
+    # result = []
+    # for value in data:
+    #     tmp = {}
+    #     for (index,column) in enumerate(value):
+    #         tmp[columns[index][0]] = column
+
+    # table = TableMeta()    
+    
+    table = TableMeta(tableItems)
+    table.classes = ['table', 'table-bordered']
+
+    return table
                 
-    classes = ['table', 'table-bordered']
-    no_items    = 'There are no results for this query'
+    
 
 def get_column_names(cursor):
     return cursor.column_names
@@ -97,21 +122,21 @@ def get_column_names(cursor):
 #          Item('Name3', 'Description3')]
 # table = ItemTable(items)
 
+WebElements = []
 
 # Pretty sure we can do this since we dont change much with the webpage 
 # TODO: Test it till it breaks
-@cache
-def StupidConcatElements(WebElements):
+def StupidConcatElements():
     ConcatResult = ""
     for Element in WebElements:
-        if isinstance(Element, ItemTable):
+        if isinstance(Element, Table):
             ConcatResult += Element.__html__()
         else:
             try:
                 ConcatResult += str(Element)
             except:
                 ConcatResult += "ELEMENT ERROR"
-    
+    WebElements.clear()
     return Markup(ConcatResult)
 
 # Add function to 
@@ -127,14 +152,13 @@ def fallbackRedirect(u_path):
 # Landing Page
 @cache
 @app.route('/query', methods = ['GET'])
-def queryPage():
-    return render_template("base.html")
+def queryPage(Error=None):
+    return render_template("base.html", Error=Error)
 
-# TODO: parse Query properly
-# TODO: Get info from Database
-# TODO: Display it properly
+
 # TODO: Save Queries in folder
 # TODO: User specific Query folders?
+# TODO: Only allow viewing of data
 
 # Check else statement for info on GET method
 @app.route('/data', methods = ['POST', 'GET'])
@@ -148,16 +172,18 @@ def tablePage():
                 requested_Query = request.form["requested_Query"]
 
                 try:
-                    curr = GetCursor(db_Conn_Pool)
-                    
-                    curr.execute()
-                    
-                    WebElements = []
-                    WebElements.append(table)
+                    curr = GetConnection(db_Conn_Pool).cursor()
+                    curr.execute(f"USE {db_Info.db_name};")
+                    curr.execute(requested_Query)
 
+                    data = curr.fetchall()
+
+                    table = build_table(curr, data)
+                    WebElements.append(table)
+                    app.jinja_env.globals.update(Elements=StupidConcatElements())
                     curr.close()
                 except mariadb.Error as e:
-                    print(e)
+                    return queryPage(e)
                 return render_template("tableDisplay.html")
         # Added GET so that users dont hit a "Method Not Allowed Page" somehow
         return redirect("/query", code=302)
@@ -179,5 +205,5 @@ def tablePage():
     
 
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)

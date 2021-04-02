@@ -1,5 +1,5 @@
 from flask import Flask, request
-from markupsafe import Markup
+# from markupsafe import Markup
 from flask_table import Table, Col
 
 

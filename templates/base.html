@@ -2,25 +2,26 @@
 <html lang="en">
 
 <head>
+
+    {% block head %}
+        
+        <title> QueryViewer -{% block title %} Search{% endblock %}</title>
+    
+    {%endblock%}
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='generalStyle.css') }}">
     <div class="error_div">
         <h1 class="error">{% if Error is defined %} 
                 {{Error}} 
             {% endif %}</h1>
     </div>
-    {% block head %}
-    <title> QueryViewer -{% block title %} Search{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    {%endblock%}
+    
 </head>
 
 <body>
       <div id="content"> 
             {%block content%}
-            <form action = "{{url_for('tablePage')}}" method = "post">
-                <p>Use Old/Cached Data? <input name = "use_Old_Data"    type = "checkbox"   class ="query">no       </input></p>
-                <p>Querry Database      <input name = "requested_Query" type = "text"       class ="query">         </input></p>
-                                        <button                         type = "submit"     class ="query">Search   </button>
-            </form>
+            {% include "searchForm.html" %}
             {%endblock%} 
     </div>
     

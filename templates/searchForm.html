@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='formStyle.css') }}">
+
+{% block content %}
+        <form action = "{{url_for('QueryView:post')}}" method = "post">
+                <p>Use Old/Cached Data? <input name = "use_Old_Data"    type = "checkbox"   class ="query">         </input></p>
+                <p>Querry Database      <input name = "requested_Query" type = "text"       class ="query">         </input></p>
+                                        <button                         type = "submit"     class ="query">Search   </button>
+        </form>
+        
+
+    
+{% endblock content %}

@@ -1,0 +1,17 @@
+#error {
+    color: darkred;
+}
+
+table {
+    border: 1px solid black;
+    margin: 1px;
+    padding: 1px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid black;
+    margin: 1px;
+    padding: 1px;
+}

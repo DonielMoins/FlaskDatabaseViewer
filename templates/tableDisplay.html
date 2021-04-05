@@ -1,14 +1,9 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {%block title%} Data {%endblock%}
 
-{% block content %}
-        <form action = "{{url_for('tablePage')}}" method = "post">
-                <p>Use Old/Cached Data? <input name = "use_Old_Data"    type = "checkbox"   class ="query">         </input></p>
-                <p>Querry Database      <input name = "requested_Query" type = "text"       class ="query">         </input></p>
-                                        <button                         type = "submit"     class ="query">Search   </button>
-        </form>
-        
+{%block content%}
+    {% include "searchForm.html" %}
+{%endblock%}
 
-    {{Elements}}
-{% endblock content %}
+{{Elements}}

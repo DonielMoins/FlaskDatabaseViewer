@@ -1,7 +1,7 @@
 import config
 import mariadb
 from mariadb import ConnectionPool
-from dataTypes.db import DB_INFO
+from dataTypes.db_info import DB_INFO
 
 # from utility.utils.
 

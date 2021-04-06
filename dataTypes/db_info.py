@@ -1,12 +1,13 @@
 from utility.utils import searchForDict as search
 
+
 class DB_INFO:
-    def __init__(self, **kwargs):
-        if len(kwargs) != 0:
+    def __init__(self, info_dict: dict = None, **kwargs):
+        if isinstance(info_dict, dict): 
+            self.setargs(info_dict)
+        elif len(kwargs) != 0:
             if any(isinstance(argument, dict) for argument in kwargs):
-                self.setkwargs(search(kwargs))
-            elif isinstance(kwargs, dict):
-                self.setkwargs(kwargs)
+                self.setargs(search(kwargs))
         else:
             # If no arguments given, go to defaults.
             self.host = "localhost"
@@ -17,12 +18,7 @@ class DB_INFO:
             self.pool_name = "pool_name"
             self.pool_size = 10
     
-    @property
-    def DB_INFO(self, value):
-        self.DB_INFO = value
-    
-    @DB_INFO.setter
-    def setkwargs(self, **kwargs):
+    def setargs(self, kwargs: dict):
         self.host = kwargs["host"]
         self.user = kwargs["user"]
         self.passwd = kwargs["passwd"]

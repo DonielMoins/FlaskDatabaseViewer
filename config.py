@@ -7,3 +7,5 @@ db_settings = {"host": "localhost",
                "pool_name": "FlaskDatabaseviewer",
                "pool_size": 10}
 
+debug = True
+sqlSuffix = [".sql"]

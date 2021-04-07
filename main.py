@@ -5,9 +5,8 @@ from helper.db_helper import DB_INFO, MakeConnectionPool, GetConnection
 from helper.table_helper import build_table, isTable
 from flask import Flask, request, render_template, redirect
 from markupsafe import Markup
-from config import db_settings
-import os
-from os import path
+from config import db_settings, debug, sqlSuffix
+from os import path, walk, getcwd
 
 
 # Setup Flask App
@@ -86,25 +85,29 @@ def tablePage():
 
 dirDict = {}
 
-
+# Checks every dir from location specified for file
+#  that ends with any suffix from config.sqlSuffix 
+# (imported as just sqlSuffix), recursively. 
 def getSQLfiles(loc):
+    
     dictionary = {}
     dirnames, filenames = [], []
 
-    for (__dirpath, _dirnames, _filenames) in os.walk(loc):
+    for (__dirpath, _dirnames, _filenames) in walk(loc):
         dirnames.extend(_dirnames)
         filenames.extend(_filenames)
         break
     for filename in filenames:
-        if filename.endswith("")dictionary[filename] = path.join(loc, filename)
+        if str(filename).endswith([suffix for suffix in sqlSuffix]):
+            dictionary[filename] = path.join(loc, filename) 
     for dirname in dirnames:
         recLoc = path.join(loc, dirname)
         dictionary[recLoc] = getSQLfiles(recLoc)
         
     return dictionary
 
+dirDict = getSQLfiles(getcwd())
 
-dirDict = getSQLfiles(os.getcwd())
 
 
 
@@ -113,5 +116,5 @@ if __name__ == "__main__":
 
     # run.remote()
     
-    app.run(debug=True)
+    app.run(debug=debug)
 

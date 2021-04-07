@@ -6,6 +6,8 @@ from helper.table_helper import build_table, isTable
 from flask import Flask, request, render_template, redirect
 from markupsafe import Markup
 from config import db_settings
+import os
+from os import path
 
 
 # Setup Flask App
@@ -80,12 +82,36 @@ def tablePage():
         return render_template("tableDisplay.html")
     # Added GET so that users dont hit a "Method Not Allowed Page" somehow
     return redirect("/query", code=302)
-    
+
+
+dirDict = {}
+
+
+def getSQLfiles(loc):
+    dictionary = {}
+    dirnames, filenames = [], []
+
+    for (__dirpath, _dirnames, _filenames) in os.walk(loc):
+        dirnames.extend(_dirnames)
+        filenames.extend(_filenames)
+        break
+    for filename in filenames:
+        if filename.endswith("")dictionary[filename] = path.join(loc, filename)
+    for dirname in dirnames:
+        recLoc = path.join(loc, dirname)
+        dictionary[recLoc] = getSQLfiles(recLoc)
+        
+    return dictionary
+
+
+dirDict = getSQLfiles(os.getcwd())
+
 
 
 if __name__ == "__main__":
     # ray.init(num_cpus=num_cpus, local_mode=True)
 
     # run.remote()
+    
     app.run(debug=True)
 

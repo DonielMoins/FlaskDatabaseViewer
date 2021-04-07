@@ -1,4 +1,4 @@
-from config import retryTimeout, connectionRetries, maxConcurrentQueues
+# from config import retryTimeout, connectionRetries, maxConcurrentQueues
 from threading import *
 import threading
 from exceptions.TooManyRetries import TooManyRetriesException

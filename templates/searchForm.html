@@ -1,20 +1,26 @@
-<div class="">
-        <div class = "mdl-layout-spacer">
-        <div class = "mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
-         <div class = "mdl-layout__drawer">
-            <button class="mdl-button mdl-js-button mdl-button--primary">SQL Files</button>
-            <nav class = "mdl-navigation">
-               <a class = "mdl-navigation__link" href = "">Home</a>
-               <a class = "mdl-navigation__link" href = "">About</a>    
-            </nav>
-         </div>
-        </div>
-        <form action = "{{url_for('tablePage')}}" method = "post">
-        
-        <div class="mdl-textfield">
-                <p class = "mdl-layout__title mdl-textfield mdl-cell">Querry Database</p>
-        </div>
-                
-                <button type = "submit" class ="mdl-cell mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent material-icons mdl-cell ">Search</button>
-        </form>      
+
+<div class="mdl-layout__title">
+                <p class = "mdl-layout__title ">Querry Database</p>
 </div>
+
+
+        <div class="mdl-cell mdl-cell--top">
+                {{sqlFiles}}    
+        </div> 
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type=text/javascript> 
+(function() {
+  var elements = $('.resize');
+  if(elements.length < 0) {
+    return;
+  }
+  elements.each(function(i, element) {
+    while(element.scrollWidth > element.offsetWidth || element.scrollHeight > element.offsetHeight) {
+      var newFontSize = (parseFloat($(element).css('font-size').slice(0, -2)) * 0.95) + 'px';
+      $(element).css('font-size', newFontSize);
+    }
+  });
+})();
+</script>  
+

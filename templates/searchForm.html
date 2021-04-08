@@ -1,12 +1,20 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='formStyle.css') }}">
-
-{% block content %}
+<div class="">
+        <div class = "mdl-layout-spacer">
+        <div class = "mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+         <div class = "mdl-layout__drawer">
+            <button class="mdl-button mdl-js-button mdl-button--primary">SQL Files</button>
+            <nav class = "mdl-navigation">
+               <a class = "mdl-navigation__link" href = "">Home</a>
+               <a class = "mdl-navigation__link" href = "">About</a>    
+            </nav>
+         </div>
+        </div>
         <form action = "{{url_for('tablePage')}}" method = "post">
-                <p>Use Old/Cached Data? <input name = "use_Old_Data"    type = "checkbox"   class ="query">         </input></p>
-                <p>Querry Database      <input name = "requested_Query" type = "text"       class ="query">         </input></p>
-                                        <button                         type = "submit"     class ="query">Search   </button>
-        </form>
         
-
-    
-{% endblock content %}
+        <div class="mdl-textfield">
+                <p class = "mdl-layout__title mdl-textfield mdl-cell">Querry Database</p>
+        </div>
+                
+                <button type = "submit" class ="mdl-cell mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent material-icons mdl-cell ">Search</button>
+        </form>      
+</div>

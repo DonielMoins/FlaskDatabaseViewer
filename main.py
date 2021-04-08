@@ -97,14 +97,22 @@ def getSQLfiles(loc):
         dirnames.extend(_dirnames)
         filenames.extend(_filenames)
         break
+    
     for filename in filenames:
-        if str(filename).endswith([suffix for suffix in sqlSuffix]):
-            dictionary[filename] = path.join(loc, filename) 
+        for suffix in sqlSuffix:
+            if str(filename).endswith(suffix ):
+                dictionary[filename] = path.join(loc, filename) 
+                
     for dirname in dirnames:
         recLoc = path.join(loc, dirname)
-        dictionary[recLoc] = getSQLfiles(recLoc)
+        recResult = getSQLfiles(recLoc) 
+        if recResult is not None: dictionary[recLoc] = recResult
         
-    return dictionary
+    if any(dictionary.values()):
+        return dictionary  
+    else: return 
+    
+    
 
 dirDict = getSQLfiles(getcwd())
 

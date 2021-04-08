@@ -23,8 +23,9 @@ def build_table(cursor, data):
                 rowDict[cols[colIndex]] = row[colIndex]
             tableItems.append(rowDict)
         table = TableMeta(tableItems)
-        table.classes   = ['table', 'table-bordered']
-        table.no_items  = 'There are no results for this query'
+        table.classes = ["mdl-cell", 'mdl-data-table__cell--non-numeric', 'mdl-data-table', "mdl-color-text--grey-100", "mdl-data-table", "mdl-js-data-table", "mdl-shadow--2dp"]
+        table.thead_classes = ["thead", "mdl-color-text--grey-50", "th", "tr", "mdl-data-table__cell--non-numeric"]
+        table.no_items = 'There are no results for this query'
         return table
     raise Exception("Cursor cannot be NoneType")
     

@@ -4,26 +4,27 @@
 <head>
 
     {% block head %}
-        
-        <title> QueryViewer -{% block title %} Search{% endblock %}</title>
-    
+    <title> QueryViewer -{% block title %} Search{% endblock %}</title>
     {%endblock%}
-
-        <link rel="stylesheet" href="{{ url_for('static', filename='generalStyle.css') }}">
-    <div class="error_div">
-        <h1 class="error">{% if Error is defined %} 
-                {{Error}} 
-            {% endif %}</h1>
+    
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1">
+    <script src = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='generalStyle.css') }}"/>
+    {% if Error is defined %} 
+    <div class="mdl-card is-invalid">
+        <h3 class="mdl-card__title-text error"> Error during action</h3>
+        <p class="mdl-textfield__error"> {{Error}} </h1>
     </div>
+    {% endif %}
     
 </head>
 
-<body>
-      <div id="content"> 
+<body class = "mdl-color--primary-dark mdl-typography--body-1-force-preferred-font-color-contrast mdl-layout mdl-layout-icon">
+      <main class= "mdl-layout__content mdl-grid " id="content"> 
             {%block content%}
             {% include "searchForm.html" %}
             {%endblock%} 
-    </div>
+    </main>
     
 </body>
 

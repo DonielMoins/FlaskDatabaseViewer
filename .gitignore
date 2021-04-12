@@ -1,6 +1,7 @@
 .vscode/
-venv/pyvenv.cfg
-*.pyc
-*/**/__pycache__
-**/__pycache__
-*/__pycache__
+pyvenv.cfg
+
+config.py
+
+__pycache__/
+*.py[cod]
